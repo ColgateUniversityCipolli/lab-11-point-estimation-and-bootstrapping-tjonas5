@@ -111,6 +111,7 @@ for(i in 1:n.sims){
  (results_p$var[i] = var(x) ) # variance
  (results_p$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
 }
+means_p = tibble(var_mean = mean(results_p$var), not_var_mean = mean(results_p$not_var))
 
 # Binomial
 size = 50
@@ -121,9 +122,9 @@ for(i in 1:n.sims){
  (results_b$var[i] = var(x) ) # variance
  (results_b$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
 }
+means_b = tibble(var_mean = mean(results_b$var), not_var_mean = mean(results_b$not_var))
 
 # Normal
-
 mean = 0
 sd = sqrt(2)
 results_n = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
@@ -132,6 +133,7 @@ for(i in 1:n.sims){
  (results_n$var[i] = var(x) ) # variance
  (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
 }
+means_n = tibble(var_mean = mean(results_n$var), not_var_mean = mean(results_n$not_var))
 
 # Exponential
 lambda = 1/sqrt(2)
@@ -141,7 +143,7 @@ for(i in 1:n.sims){
  (results_e$var[i] = var(x) ) # variance
  (results_e$not_var[i] = (n-1)/n * var(x)) # the "not" variance - avg. squared dist from mean
 }
-
+means_e = tibble(var_mean = mean(results_e$var), not_var_mean = mean(results_e$not_var))
 
 ```
 
@@ -171,16 +173,62 @@ precision_e = tibble(var_prec = 1/var(results_e$var), notvar_prec = 1/var(result
 # MSE
 mse_b = tibble(var_mse = (bias_b$varbias)^2 + var(results_b$var),
 var_notmse = bias_b$notvarbias)^2 + var(results_b$not_var)
+
 mse_p = tibble(var_mse = (bias_p$varbias)^2 + var(results_p$var),
 var_notmse = bias_p$notvarbias)^2 + var(results_p$not_var)
+
 mse_n = tibble(var_mse = (bias_n$varbias)^2 + var(results_n$var),
 var_notmse = (bias_n$notvarbias)^2 + var(results_n$not_var))
+
 mse_e = tibble(var_mse = (bias_e$varbias)^2 + var(results_e$var),
 var_notmse = (bias_e$notvarbias)^2 + var(results_e$not_var))
 
 
 # combining all calculated values into a tibble for each distrib
+combined_p = bind_cols(mse_p, bias_p, precision_p, means_p)
+combined_b = bind_cols(mse_b, bias_b, precision_b, means_b)
+combined_e = bind_cols(mse_e, bias_e, precision_e, means_e)
+combined_n = bind_cols(mse_n, bias_n, precision_n, means_n)
+
+all_dists = bind_rows(combined_p, combined_b, combined_n, combined_e) |>
+  add_column(Distribution = c("Poisson", "Binomial", "Normal", "Exponential"), .before = 1)
 ```
+
+```{r}
+#| label: tbl-dists-compared
+#| tbl-cap: "Different properties of the distributions"
+#| tbl-align: "center"
+#| size: scriptsize
+all_dists |> 
+  knitr::kable(digits = 2)
+```
+
+```{r}
+poisson_var = ggplot(results_p) +
+    geom_boxplot(aes(x="", y = var), width=.1) +
+    geom_hline(yintercept = 2, color = "red") +
+    theme_bw() + 
+    labs(x = "", y="Variance", title = "Variance estimator")
+
+poisson_notvar = ggplot(results_p) +
+    geom_boxplot(aes(x="", y = not_var), width=.1) +
+    geom_hline(yintercept = 2, color = "red") +
+    theme_bw() + 
+    labs(x = "", y="Variance", title = "'Not-variance' estimator")
+```
+```{r}
+#| label: fig-box-poisson-results
+#| fig-cap: "Boxplots comparing the variances of the two estimators for variance, with data from the Poisson distribution"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+poisson_var + poisson_notvar
+```
+
+
+
 
 ```{r}
 binom_var = ggplot(results_b) +
@@ -197,7 +245,7 @@ binom_notvar = ggplot(results_b) +
 ```
 ```{r}
 #| label: fig-box-binom-results
-#| fig-cap: "Boxplots comparing the variances of the two estimators for variance"
+#| fig-cap: "Boxplots comparing the variances of the two estimators for variance, with data from the Binomial distribution"
 #| fig-width: 5
 #| fig-height: 3
 #| scale: "80%"
@@ -206,7 +254,53 @@ binom_notvar = ggplot(results_b) +
 binom_var + binom_notvar
 ```
 
+```{r}
+norm_var = ggplot(results_n) +
+    geom_boxplot(aes(x="", y = var), width=.1) +
+    geom_hline(yintercept = 2, color = "red") +
+    theme_bw() + 
+    labs(x = "", y="Variance", title = "Variance estimator")
 
+norm_notvar = ggplot(results_n) +
+    geom_boxplot(aes(x="", y = not_var), width=.1) +
+    geom_hline(yintercept = 2, color = "red") +
+    theme_bw() + 
+    labs(x = "", y="Variance", title = "'Not-variance' estimator")
+```
+```{r}
+#| label: fig-box-norm-results
+#| fig-cap: "Boxplots comparing the variances of the two estimators for variance, with data from the Normal distribution"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+norm_var + norm_notvar
+```
+
+```{r}
+exp_var = ggplot(results_n) +
+    geom_boxplot(aes(x="", y = var), width=.1) +
+    geom_hline(yintercept = 2, color = "red") +
+    theme_bw() + 
+    labs(x = "", y="Variance", title = "Variance estimator")
+
+exp_notvar = ggplot(results_n) +
+    geom_boxplot(aes(x="", y = not_var), width=.1) +
+    geom_hline(yintercept = 2, color = "red") +
+    theme_bw() + 
+    labs(x = "", y="Variance", title = "'Not-variance' estimator")
+```
+```{r}
+#| label: fig-box-exp-results
+#| fig-cap: "Boxplots comparing the variances of the two estimators for variance, with data from the Exponential distribution"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+exp_var + exp_notvar
+```
 
 
 ## Simulation over various sample sizes
