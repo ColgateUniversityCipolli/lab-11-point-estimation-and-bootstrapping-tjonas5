@@ -187,14 +187,22 @@ binom_var = ggplot(results_b) +
     geom_boxplot(aes(x="", y = var), width=.1) +
     geom_hline(yintercept = 2, color = "red") +
     theme_bw() + 
-    labs(x = "", y="Variance")
+    labs(x = "", y="Variance", title = "Variance estimator")
 
 binom_notvar = ggplot(results_b) +
     geom_boxplot(aes(x="", y = not_var), width=.1) +
     geom_hline(yintercept = 2, color = "red") +
     theme_bw() + 
-    labs(x = "", y="Variance")
-
+    labs(x = "", y="Variance", title = "'Not-variance' estimator")
+```
+```{r}
+#| label: fig-box-binom-results
+#| fig-cap: "Boxplots comparing the variances of the two estimators for variance"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
 binom_var + binom_notvar
 ```
 
