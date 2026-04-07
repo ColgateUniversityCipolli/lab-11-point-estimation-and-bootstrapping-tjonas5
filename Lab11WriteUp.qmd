@@ -98,6 +98,50 @@ For each distribution, write a loop that completes the following 1000 times. Put
 
 Start with $n=20$. Is there evidence that $S_{n-1}^2$ is a better estimator than $S_n^2$?
 
+**Solution** 
+```{r}
+set.seed(7272)
+n = 20
+n.sims=1000
+# Poisson 
+lambda = 2
+results_p = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_p$var[i] = var(x) ) # variance
+ (results_p$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+
+# Binomial
+n = 50
+p = (5-sqrt(21))/10
+results_b = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rbinom(n, n, p)
+ (results_b$var[i] = var(x) ) # variance
+ (results_b$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+
+# Normal
+mean = 0
+sd = sqrt(2)
+results_n = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rnorm(n, mean, sd)
+ (results_n$var[i] = var(x) ) # variance
+ (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+
+# Exponential
+lambda = 1/sqrt(2)
+results_e = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rexp(n, lambda)
+ (results_e$var[i] = var(x) ) # variance
+ (results_e$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
 Create a plot or combination of plots (using patchwork) to show the results across all four distributions. Make sure to create a corresponding table that numerically summarizes the results of the simulation. You should include
 \begin{align*}
 \textrm{Bias} &= \textrm{Average of Estimates} - \textrm{True Value}\\
