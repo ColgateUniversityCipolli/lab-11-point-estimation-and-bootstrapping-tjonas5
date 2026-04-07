@@ -113,16 +113,17 @@ for(i in 1:n.sims){
 }
 
 # Binomial
-n = 50
+size = 50
 p = (5-sqrt(21))/10
 results_b = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
 for(i in 1:n.sims){
-  x = rbinom(n, n, p)
+  x = rbinom(n, size, p)
  (results_b$var[i] = var(x) ) # variance
  (results_b$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
 }
 
 # Normal
+
 mean = 0
 sd = sqrt(2)
 results_n = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
@@ -138,9 +139,13 @@ results_e = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
 for(i in 1:n.sims){
   x = rexp(n, lambda)
  (results_e$var[i] = var(x) ) # variance
- (results_e$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+ (results_e$not_var[i] = (n-1)/n * var(x)) # the "not" variance - avg. squared dist from mean
 }
+
+
 ```
+
+Since we know the true variance of all the models is 2, we can compare the accuracy of the calculated variance and the calculated "not-variance" by seeing how close they are to 2. For every model, at n=20, the variance is closer to 2 than the "not-variance", which shows that it is a better estimator. 
 
 Create a plot or combination of plots (using patchwork) to show the results across all four distributions. Make sure to create a corresponding table that numerically summarizes the results of the simulation. You should include
 \begin{align*}
@@ -148,6 +153,53 @@ Create a plot or combination of plots (using patchwork) to show the results acro
 \textrm{Precision} &= \frac{1}{\textrm{Variance of Estimates}}\\
 \textrm{Mean Square Error} &= \textrm{Bias}^2 + \textrm{Variance of Estimates}.
 \end{align*}
+
+**Solution**
+```{r}
+# biases
+bias_b = tibble(varbias = mean(results_b$var) - 2, notvarbias=mean(results_b$not_var) - 2)
+bias_p = tibble(varbias = mean(results_p$var) - 2, notvarbias=mean(results_p$not_var) - 2)
+bias_n = tibble(varbias = mean(results_n$var) - 2, notvarbias=mean(results_n$not_var) - 2)
+bias_e = tibble(varbias = mean(results_e$var) - 2, notvarbias=mean(results_e$not_var) - 2)
+
+# precisions
+precision_b = tibble(var_prec = 1/var(results_b$var), notvar_prec = 1/var(results_b$not_var))
+precision_p = tibble(var_prec = 1/var(results_p$var), notvar_prec = 1/var(results_p$not_var))
+precision_n = tibble(var_prec = 1/var(results_n$var), notvar_prec = 1/var(results_n$not_var))
+precision_e = tibble(var_prec = 1/var(results_e$var), notvar_prec = 1/var(results_e$not_var))
+
+# MSE
+mse_b = tibble(var_mse = (bias_b$varbias)^2 + var(results_b$var),
+var_notmse = bias_b$notvarbias)^2 + var(results_b$not_var)
+mse_p = tibble(var_mse = (bias_p$varbias)^2 + var(results_p$var),
+var_notmse = bias_p$notvarbias)^2 + var(results_p$not_var)
+mse_n = tibble(var_mse = (bias_n$varbias)^2 + var(results_n$var),
+var_notmse = (bias_n$notvarbias)^2 + var(results_n$not_var))
+mse_e = tibble(var_mse = (bias_e$varbias)^2 + var(results_e$var),
+var_notmse = (bias_e$notvarbias)^2 + var(results_e$not_var))
+
+
+# combining all calculated values into a tibble for each distrib
+```
+
+```{r}
+binom_var = ggplot(results_b) +
+    geom_boxplot(aes(x="", y = var), width=.1) +
+    geom_hline(yintercept = 2, color = "red") +
+    theme_bw() + 
+    labs(x = "", y="Variance")
+
+binom_notvar = ggplot(results_b) +
+    geom_boxplot(aes(x="", y = not_var), width=.1) +
+    geom_hline(yintercept = 2, color = "red") +
+    theme_bw() + 
+    labs(x = "", y="Variance")
+
+binom_var + binom_notvar
+```
+
+
+
 
 ## Simulation over various sample sizes
 Consider the effect of the sample size have on these results. Provide a graphical and numerical summary of what happens as $n$ increases -- say $n=20$, $n=50$, $n=100$, and $n=500$. Does the result in your initial simulation hold across samples? Or, do things change as the sample size changes? Ensure to set your randomization seed.
