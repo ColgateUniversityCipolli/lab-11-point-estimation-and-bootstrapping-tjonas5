@@ -785,6 +785,7 @@ poisson_notvar = ggplot(results_p) +
     geom_hline(yintercept = 2, color = "red") +
     theme_bw() + 
     labs(x = "", y="Variance", title = "'Not-variance' estimator")
+
 ```
 ```{r}
 #| label: fig-box-poisson-results-n500
@@ -874,13 +875,537 @@ Looking at the different tables produced for varying values of n, we can see tha
 ## Simulation
 You have written code to draw a random sample of various sizes from each distribution, and to calculate and store the calculated estimates. Rework your code to produce a density plot of the $s_{n-1}^2$ and $s_{n}^2$. Do you have a guess about their distribution? Ensure to set your randomization seed. 
 
+**Solution**
 ```{r}
-set.seed(7272)
+n = 20
+# Poisson 
+lambda = 2
+results_p = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_p$var[i] = var(x) ) # variance
+ (results_p$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
 
+```{r}
+#| label: fig-poisson-comparison-n20
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Poisson distribution when n = 20"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+pvar_dplot=ggplot(data=results_p) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+pnotvar_dplot=ggplot(data=results_p) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+pvar_dplot + pnotvar_dplot
+```
+
+```{r}
+n = 50
+# Poisson 
+lambda = 2
+results_p = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_p$var[i] = var(x) ) # variance
+ (results_p$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-poisson-comparison-n50
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Poisson distribution when n = 50"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+pvar_dplot=ggplot(data=results_p) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+pnotvar_dplot=ggplot(data=results_p) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+pvar_dplot + pnotvar_dplot
+```
+
+```{r}
+n = 100
+# Poisson 
+lambda = 2
+results_p = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_p$var[i] = var(x) ) # variance
+ (results_p$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-poisson-comparison-n100
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Poisson distribution when n = 100"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+pvar_dplot=ggplot(data=results_p) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+pnotvar_dplot=ggplot(data=results_p) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+pvar_dplot + pnotvar_dplot
+```
+
+```{r}
+n = 500
+# Poisson 
+lambda = 2
+results_p = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_p$var[i] = var(x) ) # variance
+ (results_p$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-poisson-comparison-n500
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Poisson distribution when n = 500"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+pvar_dplot=ggplot(data=results_p) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+pnotvar_dplot=ggplot(data=results_p) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+pvar_dplot + pnotvar_dplot
+```
+
+```{r}
+n = 20
+# binomial 
+lambda = 2
+results_b = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_b$var[i] = var(x) ) # variance
+ (results_b$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-binomial-comparison-n20
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Binomial distribution when n = 20"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+
+set.seed(7272)
+bvar_dplot=ggplot(data=results_b) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+bnotvar_dplot=ggplot(data=results_b) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+bvar_dplot + bnotvar_dplot
+```
+
+
+```{r}
+n = 50
+# binomial 
+lambda = 2
+results_b = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_b$var[i] = var(x) ) # variance
+ (results_b$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-binomial-comparison-n50
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Binomial distribution when n = 50"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+
+set.seed(7272)
+bvar_dplot=ggplot(data=results_b) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+bnotvar_dplot=ggplot(data=results_b) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+bvar_dplot + bnotvar_dplot
+```
+
+```{r}
+n = 100
+# binomial 
+lambda = 2
+results_b = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_b$var[i] = var(x) ) # variance
+ (results_b$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-binomial-comparison-n100
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Binomial distribution when n = 100"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+bvar_dplot=ggplot(data=results_b) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+bnotvar_dplot=ggplot(data=results_b) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+bvar_dplot + bnotvar_dplot
+```
+
+```{r}
+n = 500
+# binomial 
+lambda = 2
+results_b = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_b$var[i] = var(x) ) # variance
+ (results_b$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-binomial-comparison-n500
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Binomial distribution when n = 500"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+bvar_dplot=ggplot(data=results_b) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+bnotvar_dplot=ggplot(data=results_b) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+bvar_dplot + bnotvar_dplot
+```
+
+```{r}
+n = 20
+# exponential 
+lambda = 2
+results_e = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_e$var[i] = var(x) ) # variance
+ (results_e$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-exponential-comparison-n20
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Exponential distribution when n = 20"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+evar_dplot=ggplot(data=results_e) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+enotvar_dplot=ggplot(data=results_e) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+evar_dplot + enotvar_dplot
+```
+
+```{r}
+n = 50
+# exponential 
+lambda = 2
+results_e = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_e$var[i] = var(x) ) # variance
+ (results_e$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-exponential-comparison-n50
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Exponential distribution when n = 50"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+evar_dplot=ggplot(data=results_e) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+enotvar_dplot=ggplot(data=results_e) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+evar_dplot + enotvar_dplot
+```
+
+```{r}
+n = 100
+# exponential 
+lambda = 2
+results_e = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_e$var[i] = var(x) ) # variance
+ (results_e$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-exponential-comparison-n100
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Exponential distribution when n = 100"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+evar_dplot=ggplot(data=results_e) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+enotvar_dplot=ggplot(data=results_e) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+evar_dplot + enotvar_dplot
+```
+
+```{r}
+n = 500
+# exponential 
+lambda = 2
+results_e = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_e$var[i] = var(x) ) # variance
+ (results_e$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+
+```{r}
+#| label: fig-exponential-comparison-n500
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Exponential distribution when n = 500"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+#poisson
+set.seed(7272)
+evar_dplot=ggplot(data=results_e) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+enotvar_dplot=ggplot(data=results_e) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+evar_dplot + enotvar_dplot
+```
+
+```{r}
+n = 20
+# normal 
+lambda = 2
+results_n = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_n$var[i] = var(x) ) # variance
+ (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+```{r}
+#| label: fig-normal-comparison-n20
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Normal distribution when n = 20"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+
+set.seed(7272)
+nvar_dplot=ggplot(data=results_n) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+nnotvar_dplot=ggplot(data=results_n) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+nvar_dplot + nnotvar_dplot
+```
+
+```{r}
+n = 50
+# normal 
+lambda = 2
+results_n = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_n$var[i] = var(x) ) # variance
+ (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+```{r}
+#| label: fig-normal-comparison-n50
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Normal distribution when n = 50"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+
+set.seed(7272)
+nvar_dplot=ggplot(data=results_n) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+nnotvar_dplot=ggplot(data=results_n) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+nvar_dplot + nnotvar_dplot
+```
+
+```{r}
+n = 100
+# normal 
+lambda = 2
+results_n = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_n$var[i] = var(x) ) # variance
+ (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+```{r}
+#| label: fig-normal-comparison-n100
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Normal distribution when n = 100"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+
+set.seed(7272)
+nvar_dplot=ggplot(data=results_n) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+nnotvar_dplot=ggplot(data=results_n) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+nvar_dplot + nnotvar_dplot
+```
+
+```{r}
+n = 500
+# normal 
+lambda = 2
+results_n = tibble(var=numeric(n.sims), not_var=numeric(n.sims))
+for(i in 1:n.sims){
+  x = rpois(n, lambda)
+ (results_n$var[i] = var(x) ) # variance
+ (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
+}
+```
+```{r}
+#| label: fig-normal-comparison-n500
+#| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Normal distribution when n = 500"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+
+set.seed(7272)
+nvar_dplot=ggplot(data=results_n) +
+  stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("(S_n)^2")
+nnotvar_dplot=ggplot(data=results_n) +
+  stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
+  xlab("S_(n-1)^2")
+
+nvar_dplot + nnotvar_dplot
 ```
 
 ## Bootstrap
 Now, take *one* sample from each distribution. Instead of drawing a random sample at each iteration, sample *with replacement* from the one sample. Produce a density plot of the $s_{n-1}^2$ and $s_{n}^2$. Do we get roughly the same information as we do in the full simulation? Try this over several seeds -- what do you notice? Ensure to set your randomization seed.
+
+**Solution**
+
+```{r}
+set.seed(7272)
+n = 20  
+b = 1000  
+original_sample = rpois(n, lambda = lambda)
+var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+```
+
 
 
 # Executive Summary
