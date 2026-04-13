@@ -900,10 +900,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 pvar_dplot=ggplot(data=results_p) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1)^2")
 pnotvar_dplot=ggplot(data=results_p) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 pvar_dplot + pnotvar_dplot
 ```
@@ -932,10 +932,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 pvar_dplot=ggplot(data=results_p) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 pnotvar_dplot=ggplot(data=results_p) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 pvar_dplot + pnotvar_dplot
 ```
@@ -964,10 +964,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 pvar_dplot=ggplot(data=results_p) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 pnotvar_dplot=ggplot(data=results_p) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 pvar_dplot + pnotvar_dplot
 ```
@@ -996,10 +996,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 pvar_dplot=ggplot(data=results_p) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1)^2")
 pnotvar_dplot=ggplot(data=results_p) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 pvar_dplot + pnotvar_dplot
 ```
@@ -1028,10 +1028,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 bvar_dplot=ggplot(data=results_b) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 bnotvar_dplot=ggplot(data=results_b) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 bvar_dplot + bnotvar_dplot
 ```
@@ -1061,10 +1061,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 bvar_dplot=ggplot(data=results_b) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 bnotvar_dplot=ggplot(data=results_b) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 bvar_dplot + bnotvar_dplot
 ```
@@ -1093,10 +1093,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 bvar_dplot=ggplot(data=results_b) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 bnotvar_dplot=ggplot(data=results_b) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 bvar_dplot + bnotvar_dplot
 ```
@@ -1125,10 +1125,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 bvar_dplot=ggplot(data=results_b) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 bnotvar_dplot=ggplot(data=results_b) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 bvar_dplot + bnotvar_dplot
 ```
@@ -1157,10 +1157,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 evar_dplot=ggplot(data=results_e) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 enotvar_dplot=ggplot(data=results_e) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 evar_dplot + enotvar_dplot
 ```
@@ -1189,10 +1189,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 evar_dplot=ggplot(data=results_e) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 enotvar_dplot=ggplot(data=results_e) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 evar_dplot + enotvar_dplot
 ```
@@ -1221,10 +1221,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 evar_dplot=ggplot(data=results_e) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 enotvar_dplot=ggplot(data=results_e) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 evar_dplot + enotvar_dplot
 ```
@@ -1253,10 +1253,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 evar_dplot=ggplot(data=results_e) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 enotvar_dplot=ggplot(data=results_e) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 evar_dplot + enotvar_dplot
 ```
@@ -1272,6 +1272,7 @@ for(i in 1:n.sims){
  (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
 }
 ```
+
 ```{r}
 #| label: fig-normal-comparison-n20
 #| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Normal distribution when n = 20"
@@ -1284,10 +1285,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 nvar_dplot=ggplot(data=results_n) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 nnotvar_dplot=ggplot(data=results_n) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 nvar_dplot + nnotvar_dplot
 ```
@@ -1303,6 +1304,7 @@ for(i in 1:n.sims){
  (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
 }
 ```
+
 ```{r}
 #| label: fig-normal-comparison-n50
 #| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Normal distribution when n = 50"
@@ -1315,10 +1317,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 nvar_dplot=ggplot(data=results_n) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 nnotvar_dplot=ggplot(data=results_n) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 nvar_dplot + nnotvar_dplot
 ```
@@ -1334,6 +1336,7 @@ for(i in 1:n.sims){
  (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
 }
 ```
+
 ```{r}
 #| label: fig-normal-comparison-n100
 #| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Normal distribution when n = 100"
@@ -1346,10 +1349,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 nvar_dplot=ggplot(data=results_n) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 nnotvar_dplot=ggplot(data=results_n) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 nvar_dplot + nnotvar_dplot
 ```
@@ -1365,6 +1368,8 @@ for(i in 1:n.sims){
  (results_n$not_var[i] = (n-1)/n * var(x)) # the not variance - avg. squared dist from mean
 }
 ```
+
+
 ```{r}
 #| label: fig-normal-comparison-n500
 #| fig-cap: "Density plots of the (s_n)^2 and the (s_(n-1))^2 of the Normal distribution when n = 500"
@@ -1377,10 +1382,10 @@ for(i in 1:n.sims){
 set.seed(7272)
 nvar_dplot=ggplot(data=results_n) +
   stat_density(aes(x=var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("(S_n)^2")
+  xlab("(S_(n-1))^2")
 nnotvar_dplot=ggplot(data=results_n) +
   stat_density(aes(x=not_var), color="chartreuse2", geom="line", linewidth=1) +
-  xlab("S_(n-1)^2")
+  xlab("(S_(n))^2")
 
 nvar_dplot + nnotvar_dplot
 ```
@@ -1395,7 +1400,7 @@ set.seed(7272)
 n = 20  
 b = 1000  
 original_sample = rpois(n, lambda = lambda)
-var =var(original_sample)
+sample_var =var(original_sample)
 notvar = var(original_sample)*(n-1)/n
 boot_var = numeric(b)
 boot_notvar = numeric(b)
@@ -1404,6 +1409,122 @@ for (i in 1:b) {
   boot_var[i] = var(resample)
   boot_notvar[i] = var(resample)*(n-1)/n
 }
+bootstrap_b = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+
+```{r}
+#| label: fig-binom-bootstrap-n20
+#| fig-cap: "Density plot of the bootstrap of the variance and the variance * (n-1)/n, where n = 20"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+ggplot(data = bootstrap_b) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+set.seed(7272)
+n = 50  
+b = 1000  
+original_sample = rpois(n, lambda = lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+
+```{r}
+#| label: fig-binom-bootstrap-n50
+#| fig-cap: "Density plot of the bootstrap of the variance and the variance * (n-1)/n, where n = 50"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+ggplot(data = bootstrap_b) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+set.seed(7272)
+n = 100  
+b = 1000  
+original_sample = rpois(n, lambda = lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+
+```{r}
+#| label: fig-binom-bootstrap-n100
+#| fig-cap: "Density plot of the bootstrap of the variance and the variance * (n-1)/n, where n = 100"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+ggplot(data = bootstrap_b) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+set.seed(7272)
+n = 500  
+b = 1000  
+original_sample = rpois(n, lambda = lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+
+```{r}
+#| label: fig-binom-bootstrap-n500
+#| fig-cap: "Density plot of the bootstrap of the variance and the variance * (n-1)/n, where n = 100"
+#| fig-width: 5
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+ggplot(data = bootstrap_b) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
 ```
 
 
