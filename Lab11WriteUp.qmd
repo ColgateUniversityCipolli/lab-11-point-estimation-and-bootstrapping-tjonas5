@@ -1390,6 +1390,8 @@ nnotvar_dplot=ggplot(data=results_n) +
 nvar_dplot + nnotvar_dplot
 ```
 
+I think that the distribution of $s_{n-1}^2$ and $s_{n}^2$ are approximately normal with large enough n.
+
 ## Bootstrap
 Now, take *one* sample from each distribution. Instead of drawing a random sample at each iteration, sample *with replacement* from the one sample. Produce a density plot of the $s_{n-1}^2$ and $s_{n}^2$. Do we get roughly the same information as we do in the full simulation? Try this over several seeds -- what do you notice? Ensure to set your randomization seed.
 
@@ -1409,18 +1411,11 @@ for (i in 1:b) {
   boot_var[i] = var(resample)
   boot_notvar[i] = var(resample)*(n-1)/n
 }
-bootstrap_b = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+bootstrap_p20 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
 ```
 
 ```{r}
-#| label: fig-binom-bootstrap-n20
-#| fig-cap: "Density plot of the bootstrap of the variance and the variance * (n-1)/n, where n = 20"
-#| fig-width: 5
-#| fig-height: 3
-#| scale: "80%"
-#| fig-align: "center"
-#| size: scriptsize
-ggplot(data = bootstrap_b) +
+bootstrapp20=ggplot(data = bootstrap_p20) +
   stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
   stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
   scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
@@ -1442,18 +1437,11 @@ for (i in 1:b) {
   boot_var[i] = var(resample)
   boot_notvar[i] = var(resample)*(n-1)/n
 }
-bootstrap_b = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+bootstrap_p50 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
 ```
 
 ```{r}
-#| label: fig-binom-bootstrap-n50
-#| fig-cap: "Density plot of the bootstrap of the variance and the variance * (n-1)/n, where n = 50"
-#| fig-width: 5
-#| fig-height: 3
-#| scale: "80%"
-#| fig-align: "center"
-#| size: scriptsize
-ggplot(data = bootstrap_b) +
+bootstrapp50=ggplot(data = bootstrap_p50) +
   stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
   stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
   scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
@@ -1475,18 +1463,11 @@ for (i in 1:b) {
   boot_var[i] = var(resample)
   boot_notvar[i] = var(resample)*(n-1)/n
 }
-bootstrap_b = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+bootstrap_p100 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
 ```
 
 ```{r}
-#| label: fig-binom-bootstrap-n100
-#| fig-cap: "Density plot of the bootstrap of the variance and the variance * (n-1)/n, where n = 100"
-#| fig-width: 5
-#| fig-height: 3
-#| scale: "80%"
-#| fig-align: "center"
-#| size: scriptsize
-ggplot(data = bootstrap_b) +
+bootstrapp100=ggplot(data = bootstrap_p100) +
   stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
   stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
   scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
@@ -1508,18 +1489,11 @@ for (i in 1:b) {
   boot_var[i] = var(resample)
   boot_notvar[i] = var(resample)*(n-1)/n
 }
-bootstrap_b = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+bootstrap_p500 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
 ```
 
 ```{r}
-#| label: fig-binom-bootstrap-n500
-#| fig-cap: "Density plot of the bootstrap of the variance and the variance * (n-1)/n, where n = 100"
-#| fig-width: 5
-#| fig-height: 3
-#| scale: "80%"
-#| fig-align: "center"
-#| size: scriptsize
-ggplot(data = bootstrap_b) +
+bootstrapp500= ggplot(data = bootstrap_p500) +
   stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
   stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
   scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
@@ -1527,7 +1501,789 @@ ggplot(data = bootstrap_b) +
   labs(x = "Value")
 ```
 
+```{r}
+#| label: fig-density-pois-s7272
+#| fig-cap: "Density plots of the variance and the variance *(n-1)/n of the Poisson distribution, for values of n 20, 50, 100, and 500 in ascending order."
+#| fig-width: 8
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+bootstrapp20 + bootstrapp50 
+bootstrapp100 + bootstrapp500
+```
 
+Through these plots, we can see that as n increases, the distributions of the variance and the variance *(n-1)/n become increasingly similar, and at $n=500$ they are almost indistinguishable. This is because as n increases, the quantity $(n-1)/n$ approaches one. Interestingly, the variance appears to be the same for these values of n, just the $(s_n)^2$ changes.
+
+Now, we do the same for a different seed. 
+
+```{r}
+set.seed(492)
+n = 20  
+b = 1000  
+original_sample = rpois(n, lambda = lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_p20 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+
+```{r}
+bootstrapp20=ggplot(data = bootstrap_p20) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+set.seed(492)
+n = 50  
+b = 1000  
+original_sample = rpois(n, lambda = lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_p50 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+
+```{r}
+bootstrapp50=ggplot(data = bootstrap_p50) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+set.seed(492)
+n = 100  
+b = 1000  
+original_sample = rpois(n, lambda = lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_p100 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+
+```{r}
+bootstrapp100=ggplot(data = bootstrap_p100) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+set.seed(492)
+n = 500  
+b = 1000  
+original_sample = rpois(n, lambda = lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_p500 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+
+```{r}
+bootstrapp500= ggplot(data = bootstrap_p500) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+#| label: fig-density-pois-s492
+#| fig-cap: "Density plots of the variance and the variance *(n-1)/n of the Poisson distribution, for values of n 20, 50, 100, and 500 in ascending order."
+#| fig-width: 8
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+bootstrapp20 + bootstrapp50 
+bootstrapp100 + bootstrapp500
+```
+
+With this new seed, we can see that the variance and $(s_n)^2$ follow a similar pattern as previously, where the variance does not change with increasing n but $(s_n)^2$ does, until they become nearly indistinguishable at $n = 500$. Notably, the graphs have a different shape compared to the last seed, showing how sampling with replacement in the bootstrap changes the observed variance. 
+
+Now we repeat this process for the remaining distributions, starting with the Binomial distribution.
+
+```{r}
+set.seed(7272)
+n = 20   
+original_sample = rbinom(n = n, size = 50, prob = (5-sqrt(21))/2)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+
+bootstrap_b20 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapb20= ggplot(data = bootstrap_b20) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+n = 50 
+original_sample = rbinom(n = n, size = 50, prob = (5-sqrt(21))/2)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b50 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapb50= ggplot(data = bootstrap_b50) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 100 
+original_sample = rbinom(n = n, size = 50, prob = (5-sqrt(21))/2)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b100 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapb100= ggplot(data = bootstrap_b100) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 500 
+original_sample = rbinom(n = n, size = 50, prob = (5-sqrt(21))/2)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b500 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapb500= ggplot(data = bootstrap_b500) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+#| label: fig-density-binom-s7272
+#| fig-cap: "Density plots of the variance and the variance *(n-1)/n of the Binomial distribution, for values of n 20, 50, 100, and 500 in ascending order."
+#| fig-width: 8
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+bootstrapb20 + bootstrapb50 
+bootstrapb100 + bootstrapb500
+```
+
+Here, we change the seed and observe any potential differences. 
+
+```{r}
+set.seed(97)
+n = 20   
+original_sample = rbinom(n = n, size = 50, prob = (5-sqrt(21))/2)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+
+bootstrap_b20 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapb20= ggplot(data = bootstrap_b20) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+n = 50 
+original_sample = rbinom(n = n, size = 50, prob = (5-sqrt(21))/2)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b50 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapb50= ggplot(data = bootstrap_b50) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 100 
+original_sample = rbinom(n = n, size = 50, prob = (5-sqrt(21))/2)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b100 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapb100= ggplot(data = bootstrap_b100) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 500 
+original_sample = rbinom(n = n, size = 50, prob = (5-sqrt(21))/2)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_b500 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapb500= ggplot(data = bootstrap_b500) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+#| label: fig-density-binom-s979
+#| fig-cap: "Density plots of the variance and the variance *(n-1)/n of the Binomial distribution, for values of n 20, 50, 100, and 500 in ascending order."
+#| fig-width: 8
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+bootstrapb20 + bootstrapb50 
+bootstrapb100 + bootstrapb500
+```
+
+Here, in the Binomial distribution, we observe a similar phenomenon to the Poisson distribution. For different seeds, the graphs look different, but both seeds have $(s_n)^2$ becoming very similar to the variance as n increases.
+
+Next, we perform the same thing for the Normal distribution.
+
+```{r}
+set.seed(7272)
+n = 20   
+original_sample = rnorm(n = n, mean = 0, sd = sqrt(2))
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+
+bootstrap_n20 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapn20= ggplot(data = bootstrap_n20) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+n = 50 
+original_sample = rnorm(n = n, mean = 0, sd = sqrt(2))
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_n50 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapn50= ggplot(data = bootstrap_n50) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 100 
+original_sample = rnorm(n=n, mean = 0, sd=sqrt(2))
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_n100 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapn100= ggplot(data = bootstrap_n100) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 500 
+original_sample = rnorm(n = n, mean = 0, sd = sqrt(2))
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_n500 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapn500= ggplot(data = bootstrap_n500) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+#| label: fig-density-norm-s7272
+#| fig-cap: "Density plots of the variance and the variance *(n-1)/n of the Normal distribution, for values of n 20, 50, 100, and 500 in ascending order."
+#| fig-width: 8
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+bootstrapn20 + bootstrapn50 
+bootstrapn100 + bootstrapn500
+```
+
+Now, we change the seed to see if a similar pattern is observed. 
+```{r}
+set.seed(340)
+n = 20   
+original_sample = rnorm(n = n, mean = 0, sd = sqrt(2))
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+
+bootstrap_n20 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapn20= ggplot(data = bootstrap_n20) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+n = 50 
+original_sample = rnorm(n = n, mean = 0, sd = sqrt(2))
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_n50 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapn50= ggplot(data = bootstrap_n50) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 100 
+original_sample = rnorm(n=n, mean = 0, sd=sqrt(2))
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_n100 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapn100= ggplot(data = bootstrap_n100) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 500 
+original_sample = rnorm(n = n, mean = 0, sd = sqrt(2))
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_n500 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrapn500= ggplot(data = bootstrap_n500) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+#| label: fig-density-norm-s340
+#| fig-cap: "Density plots of the variance and the variance *(n-1)/n of the Normal distribution, for values of n 20, 50, 100, and 500 in ascending order."
+#| fig-width: 8
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+bootstrapn20 + bootstrapn50 
+bootstrapn100 + bootstrapn500
+```
+
+Again, the variance appears to keep its shape as n increases, while $(s_n)^2$ converges to the variance as n increases.
+
+Lastly, we do the same for the exponential distribution. 
+
+```{r}
+set.seed(7272)
+n = 20   
+original_sample = rexp(n, lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+
+bootstrap_e20 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrape20= ggplot(data = bootstrap_e20) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+n = 50 
+original_sample = rexp(n, lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_e50 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrape50= ggplot(data = bootstrap_e50) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 100 
+original_sample = rexp(n, lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_e100 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrape100= ggplot(data = bootstrap_e100) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 500 
+original_sample = rexp(n, lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_e500 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrape500= ggplot(data = bootstrap_e500) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+#| label: fig-density-exp-s7272
+#| fig-cap: "Density plots of the variance and the variance *(n-1)/n of the Exponential distribution, for values of n 20, 50, 100, and 500 in ascending order."
+#| fig-width: 8
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+bootstrape20 + bootstrape50 
+bootstrape100 + bootstrape500
+```
+
+Now, we change the seed to see if a similar pattern is observed. 
+```{r}
+set.seed(582)
+n = 20   
+original_sample = rexp(n, lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+
+bootstrap_e20 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrape20= ggplot(data = bootstrap_e20) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+n = 50 
+original_sample = rexp(n, lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_e50 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrape50= ggplot(data = bootstrap_e50) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 100 
+original_sample = rexp(n, lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_e100 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrape100= ggplot(data = bootstrap_e100) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1) +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1) +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+```{r}
+n = 500 
+original_sample = rexp(n, lambda)
+sample_var =var(original_sample)
+notvar = var(original_sample)*(n-1)/n
+boot_var = numeric(b)
+boot_notvar = numeric(b)
+for (i in 1:b) {
+  resample = sample(original_sample, size = n, replace = TRUE)
+  boot_var[i] = var(resample)
+  boot_notvar[i] = var(resample)*(n-1)/n
+}
+bootstrap_e500 = tibble(bootstrap_var = boot_var, bootstrap_notvar = boot_notvar)
+```
+```{r}
+bootstrape500= ggplot(data = bootstrap_e500) +
+  stat_density(aes(x = boot_var, color = "(s_(n-1))^2"), geom = "line", linewidth = 1, position = "dodge") +
+  stat_density(aes(x = bootstrap_notvar, color = "(s_n)^2"),  geom = "line", linewidth = 1, position = "dodge") +
+  scale_color_manual(values = c("(s_(n-1))^2" = "chartreuse2",
+                                "(s_n)^2"  = "darkorchid2")) +
+  labs(x = "Value")
+```
+
+```{r}
+#| label: fig-density-exp-s582
+#| fig-cap: "Density plots of the variance and the variance *(n-1)/n of the Exponential distribution, for values of n 20, 50, 100, and 500 in ascending order."
+#| fig-width: 8
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+#| size: scriptsize
+bootstrape20 + bootstrape50 
+bootstrape100 + bootstrape500
+```
+
+In these bootstraps, we saw through the graphs that they provide roughly the same information as with the full simulation, and as n increases $s_{n-1}^2$ and $s_{n}^2$ become more similar. This was the case irrespective of seed or distribution.
 
 # Executive Summary
 Summarize the work you've done here to provide a brief (200-300 word) summary of the simulation and the results using your work in Lab 11. Your summary should be professional, clear, and all claims should be corroborated with statistical support.
+
+**Solution**
+
+In this lab, we compared the point estimators
+$$S_{n-1}^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i -\bar{X})^2 $$
+
+and 
+$$S_n^2 = \frac{1}{n} \sum_{i=1}^n (X_i -\bar{X})^2.$$. 
+
+The goal was to determine why we use $S_{n-1}^2$ instead of $S_n^2$, by exploring the Poisson, Binomial, Normal, and Exponential distributions. The parameters of these distributions were selected such that the true variance for all models is 2. This lets us compare the estimators to the true variance, and make judgements from there. First, we began by calculating the Bias, Precision, and Mean Square Error (MSE) for $S_{n-1}^2$ and $S_n^2$ within each distribution, and then changing the sample size and observing the effect. To start, when $n=20$, $S_{n-1}^2$ has a higher MSE, lower bias, and lower precision across all distributions when compared to $S_n^2$. However, the mean of $S_{n-1}^2$ is closer to the true mean of 2 than $S_n^2$, across all distributions. As n increases, the difference in MSE, Bias, and Precision across all distributions decreases, and the mean of both distributions becomes closer to 2. When producing a density plot of $s_{n-1}^2$ and $s_{n}^2$, and doing so with increasing n, it is apparent that their distributions are becoming approximately normal as n increases. This was the case for all four of the distributions tested. When performing a bootstrap on each distribution, the bootstrap yielded very similar results to the full simulation. This was the case regardless of what seed was used. We can conclude that bootstrapping is an effective method, but its performance significantly improves when n is large (~500). 
